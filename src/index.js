@@ -2,14 +2,30 @@
 // import { configDotenv } from "dotenv";
 import dotenv from "dotenv";
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
 
 // dotenv.config({
 //     path : './env'
 // })
 
+const Port = process.env.PORT || 8000;
+
 dotenv.config({ path: './env' });
-connectDB();
+
+connectDB()
+.then(() => {
+    app.on("error", (error) => {
+                    console.log("Error : ", error);
+                    throw error
+                });
+    app.listen(Port, () => {
+        console.log(`server is running at ${Port}`)
+    })
+    
+}).catch((err) => {
+    console.log("MongoDb Connection is falied!!", err)
+});
 
 
 
